@@ -5,8 +5,28 @@ import 'shell.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // به‌جای صفحه خالی، خطا رو روی صفحه نشون بده
+  ErrorWidget.builder = (details) => Material(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Text(
+              'خطا:\n${details.exceptionAsString()}',
+              textDirection: TextDirection.ltr,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ),
+      );
+
   final state = AppState();
-  await state.load();
+  try {
+    await state.load();
+  } catch (e) {
+    debugPrint('load failed: $e');
+  }
   runApp(OstadiApp(state: state));
 }
 
